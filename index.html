@@ -44,10 +44,14 @@
 
     <section>
         <article><h1>ONEDECK (Микросервисный фронтенд)</h1>
-<h5>Фреймвор ONEDECK позволяет легко писать микросервисы во фронтенде.</h5>
-<h5>В рамках данного фреймворка микросервис для фронтенда назывется модуль.</h5>
+<h5>Фреймворк ONEDECK позволяет легко писать микросервисы во фронтенде.</h5>
+<h5>В рамках данного фреймворка микросервис для фронтенда называется модуль.</h5>
+<p>ONEDECK позволяет легко делить ваше приложени на модули и собирать приложение как конструктор из набора модулей.
+В дальнейшем модули легко переиспользовать.</p>
+<h5>Пример приложения <a href="https://gyk088.github.io/onedeckExampleSite">EXAMPLE</a> <a href="https://github.com/gyk088/ondeckExample">Git</a></h5>
+<h5>Документация <a href="https://gyk088.github.io/onedeck_doc/">ESDoc</a></h5>
 <h2>Модуль (микросервис, фрагмент)</h2>
-<p>Модуль - независимая, логически законченая еденица приложения, которая инкапсулирует в себе всю логику.</p>
+<p>Модуль - независимая, логически законченная единица приложения.</p>
 <ul>
 <li>
 <p>Может быть написан c помощью любого фреймворка (<a href="https://vuejs.org/">Vue</a>, <a href="https://reactjs.org/">React</a>, <a href="https://angular.io/">Angular</a>, <a href="https://webix.com/">Webix</a> ... );</p>
@@ -60,14 +64,14 @@
 </li>
 </ul>
 <h2>Виды модулей</h2>
-<p>Все модули за исключением Root модуля наследуются от базового класса <code>onedeck.Module</code>.
-Root модуль наследуется от базового класса <code>onedeck.RootModule</code>.</p>
+<p>Все модули, за исключением Root модуля наследуются от базового класса onedeck.Module.
+Root модуль наследуется от базового класса onedeck.RootModule.</p>
 <ul>
 <li><strong>Root Module</strong> Главный модуль приложения. Инициализируется один раз при старте приложения и инициализирует все модули приложения. Все модули общаются между собой через Root модуль с помощью событий. Реализует паттерн <a href="https://refactoring.guru/ru/design-patterns/mediator">Медиатор</a>.</li>
-<li><strong>Page Module</strong> Модуль страницы. Инициализируется при переходе на страницу модуля. Каждый модуль страницы соответствует конкретному url адресу. Может встраиваться в модуль макета (Layout module) и содержать в себе встраиваемые модули (Embed Module)</li>
-<li><strong>Global Module</strong> Глобальный модуль (глобальные модальные окна, нотификации). Инициализируется один раз при старте приложения. Может вызываться из любой точки приложения. Может содержать в себе Embed модули.</li>
-<li><strong>Layout Module</strong> Модуль макета (header, footer).  Инициализируется при переходе на страницу, если еще не был проинициализирован на предыдущей странице. Представляет собой контейнер для встраивания Page модуля и для встраивания Embed модулей страницы.</li>
-<li><strong>Embed Module</strong> Встраиваемый модуль. Инициализируется при переходе на страницу модуля Page либо при инициализации Global модуля. Представляет собой логически законченную часть, которая может быть встроена в различные модули приложения.</li>
+<li><strong>Page Module</strong>  Модуль страницы. Инициализируется при переходе на страницу модуля. Каждый модуль страницы соответствует конкретному url адресу. Может встраиваться в модуль макета (Layout module) и содержать в себе встраиваемые модули (Embed Module)</li>
+<li><strong>Global Module</strong>  Глобальный модуль (глобальные модульные окна, нотификации). Инициализируется один раз при старте приложения. Может вызываться из любой точки приложения. Может содержать в себе Embed модули.</li>
+<li><strong>Layout Module</strong>  Модуль макета (header, footer).  Инициализируется при переходе на страницу, если еще не был проинициализирован на предыдущей странице. Представляет собой контейнер для встраивания Page модуля и для встраивания Embed модулей страницы.</li>
+<li><strong>Embed Module</strong>  Встраиваемый модуль. Инициализируется при переходе на страницу модуля Page либо при инициализации Global модуля. Представляет собой логически законченную часть, которая может быть встроена в различные модули приложения.</li>
 </ul>
 <h2>Пример внутреннего устройства</h2>
 <pre class="prettyprint source"><code>|--project_name_dir
@@ -84,18 +88,42 @@ Root модуль наследуется от базового класса <cod
                 ...
             ...
 </code></pre>
-<p>Имя модуля начинается с заглавной буквы. Название директории модуля должно соотвествовать названию модуля.</p>
+<p>Имя модуля начинается с заглавной буквы. Название директории модуля должно соответствовать названию модуля.</p>
 <h2>Конфигурация приложения</h2>
-<p>При старте приложнеия приосиходит инициализация модуля Root, который в свою очередь динамически импортирует необходимые модули и инициализирует их.</p>
-<h4>Старт приложения (index.js):</h4>
-<pre class="prettyprint source"><code>import Config from './conf';
-new Config.rootModule(Config);
+<h2>Alias в webpack.config</h2>
+<p>Для того, чтобы пути в модуле были относительно модуля, следует прописать директиву <a href="https://webpack.js.org/configuration/resolve/#resolvealias">alias</a> в <code>webpack.config</code></p>
+<pre class="prettyprint source"><code>resolve: {
+   alias: {
+     ModuleName: path.resolve(__dirname, src/modules/ModuleName),
+     ...
+   }
+ },
+</code></pre>
+<h4>Можно автоматизировать данную процедуру (<a href="https://webpack.js.org/configuration/resolve/#resolvealias">alias</a> в <code>webpack.config</code>):</h4>
+<pre class="prettyprint source"><code>const { readdirSync } = require('fs')
+
+const modules = {}
+try {
+    readdirSync(path.resolve(__dirname, &quot;src/modules/&quot;)).forEach(m => {
+        modules[m] = path.resolve(__dirname, src/modules/${m})
+        console.info(\x1b[37m Module: \x1b[33m ${m})
+    })
+} catch (e) {
+    console.error('\x1b[31m', e.toString())
+    process.exit()
+}
+module.exports = {
+    .....
+    resolve: {
+        alias: modules
+    }
+  },
 </code></pre>
 <h4>Конфиг файл</h4>
 <pre class="prettyprint source"><code>import Root from 'Root/module';
 
 export default {
-  // роутинг с помощю history Api  или hash
+  // роутинг с помощю history Api или hash
   historyApi: false,
   // корневой путь для приложения ('/example/path/')
   rootPath: '/',
@@ -103,11 +131,11 @@ export default {
   rootModule: Root,
   // название модуля главной страницы
   mainModule: 'main',
-  // названия модуля старницы 404
+  // названия модуля страницы 404
   module404: 'notfound',
   // функция для динамического импорта модуля
   // module - название модуля и название директории модуля
-  import: async (module) => await import(`./modules/${module}/module`),
+  import: async (module) => await import(./modules/${module}/module),
   modules: {
     auth: {
       module: 'ExampleAuth',
@@ -141,16 +169,16 @@ export default {
   },
 };
 </code></pre>
-<p>Конфигурация может содеражть любые поля, в зваисимости от необходимости.</p>
+<p>Конфигурация может содержать любые поля, в зависимости от необходимости.</p>
 <h5>Обязательные поля конфигурации приложения</h5>
 <ul>
-<li><strong><code>historyApi: Bool</code></strong> - вид роутинга в приложении</li>
-<li><strong><code>rootPath: String</code></strong> - начальный роут. Если наше приложение стартует от пути <code>http://localhost:3000/example/path/</code> - в <code>rootPath</code> необходимо указать <code>/example/path/</code>;</li>
-<li><strong><code>rootModule: Class</code></strong> - класс Root модуля</li>
-<li><strong><code>mainModule: String</code></strong> - название модуля главной старницы</li>
-<li><strong><code>module404: String</code></strong> - название модуля старницы 404</li>
-<li><strong><code>import: Function</code></strong> - ассинхронная функция котора динамически импортирует все модули</li>
-<li><strong><code>modules: Object</code></strong> - объект который содержит насторйки всех модулей</li>
+<li><code>historyApi: Bool</code> - вид роутинга в приложении</li>
+<li><code>rootPath: String</code> - начальный роут. Если наше приложение стартует от пути <code>http://localhost:3000/example/path/</code>, в rootPath необходимо указать <code>/example/path/</code>;</li>
+<li><code>rootModule: Class</code> - класс Root модуля</li>
+<li><code>mainModule: String</code> - название модуля главной страницы</li>
+<li><code>module404: String</code> - название модуля страницы 404</li>
+<li><code>import: Function</code> - асинхронная функция, которая динамически импортирует все модули</li>
+<li><code>modules: Object</code> - объект, который содержит настройки всех модулей</li>
 </ul>
 <h5>Конфигурация модуля</h5>
 <pre class="prettyprint source"><code>main: {
@@ -163,13 +191,280 @@ export default {
   },
 },
 </code></pre>
-<p>Конфигурация модуля может содержать любые поля, в зваисимости от необходимости.</p>
+<p>Конфигурация модуля может содержать любые поля, в зависимости от необходимости.</p>
 <ul>
-<li><strong>ключ объекта конфигурации <code>main</code></strong>- название модуля, и данное название соответсвует url модуля <code>http://localhost:3000/main/</code></li>
-<li><strong><code>module: String</code></strong> - Обязательное поле. Содержит название модуля. Модуль должен находиться в директории с соответсвующим названием.</li>
-<li><strong><code>layout: String</code></strong> - Необязательное поле. Содержит название модуля Layout. Модуль должен находиться в директории с соответсвующим названием.</li>
-<li><strong><code>embed: Object</code></strong> - Необязательное поле. Содержит Embed модули. Модуль должен находиться в директории с соответсвующим названием, которое указано в поле  <code>module</code> .</li>
-</ul></article>
+<li><strong><code>ключ объекта конфигурации main</code></strong>- название модуля. Данное название соответсвует url модуля <code>http://localhost:3000/main/</code></li>
+<li><code>module: String</code> - Обязательное поле. Содержит название модуля. Модуль должен находиться в директории с соответствующим названием.</li>
+<li><code>layout: String</code> - Необязательное поле. Содержит название модуля Layout. Модуль должен находиться в директории с соответствующим названием.</li>
+<li><code>embed: Object</code> - Необязательное поле. Содержит Embed модули. Модуль должен находиться в директории с соответствующим названием, которое указано в поле  module .</li>
+</ul>
+<h4>Старт приложения (index.js):</h4>
+<pre class="prettyprint source"><code>import Config from './conf';
+new Config.rootModule(Config);
+</code></pre>
+<p>При старте приложнеия нам нужно инициализировать ROOT модуль, он в свою очередь проинициализирует нужные нам модули.</p>
+<h2>Пример Root модуля</h2>
+<pre class="prettyprint source"><code>import Onedeck from 'onedeck';
+import ExampleNotification from 'ExampleNotification/module';
+import ExampleGlobalWnd from 'ExampleGlobalWnd/module';
+
+export default class Root extends Onedeck.RootModule {
+  init (path) {
+    console.log('init', this.constructor.name, path);
+    this.eventHandler();
+  }
+
+  eventHandler () {
+    this.$$on('examplEvent', (exampleData) => {
+      this.exampleAction(exampleData);
+    });
+
+    this.$$on('showGlobalWnd', () => {
+      const wnd = new ExampleGlobalWnd();
+      wnd.show();
+    });
+
+    this.$$on('notify', (text) => {
+      const notifyObj = new ExampleNotification();
+      notifyObj.notify(text);
+    });
+  }
+
+  dispatcher (path, state) {
+    console.log('dispatcher', this.constructor.name, path, state);
+  }
+
+  mounted (module, layout) {
+    console.log('mounted', this.constructor.name, module, layout);
+  }
+}
+</code></pre>
+<p>Root module - является ядром всего приложения, наследуется от Onedeck.RootModule</p>
+<p>Модуль описывает следующие методы</p>
+<ul>
+<li><code>init (path)</code> - инициализация Root модуля. При инициализации нужно вызвать метод <code>this.eventHandler();</code></li>
+<li><code>eventHandler ()</code> - в этом методе мы описываем все события уровня приложения (глобальные)</li>
+</ul>
+<pre class="prettyprint source"><code>    this.$$on('examplEvent', (exampleData) => {
+      this.exampleAction(exampleData);
+    });
+</code></pre>
+<p>после этого объявления (<code>this.$$on</code>) в каждом модуле можно вызвать это событие  <code>module.$$gemit('examplEvent', data)</code></p>
+<ul>
+<li><code>dispatcher  (path, state)</code> - метод вызывается при переходе на новый url адрес.</li>
+</ul>
+<pre class="prettyprint source"><code>   module.$$rout({
+       path: '/module_name/item/1',
+       state: {
+           id: 1,
+           name: &quot;Example&quot;
+       },
+   });
+</code></pre>
+<p>каждый модуль имеет метод <code>$$rout</code>. После перехода на новый роут в каждом модуле вызывается метод <code>dispatcher</code>
+Метод  dispatcher принимает <code>path</code> - массив <code>['module_name', 'item', '1']</code> и <code>state</code> - <code>{id: 1, name: &quot;Example&quot;}</code></p>
+<ul>
+<li><code>mounted  (module, layout)</code> - метод вызывается после инициализации всех модулей.
+mounted принимает объекты module - текущий Page модуль и  layout - текущий Layout модуль</li>
+</ul>
+<h2>Пример Модуля</h2>
+<pre class="prettyprint source"><code>import Onedeck from 'onedeck';
+import App from 'ExampleModule/App.vue';
+import Vue from 'vue';
+
+/**
+ * Class ExampleModule
+ * module use Vue
+ */
+export default class ExampleModule extends Onedeck.Module {
+  init (path, state) {
+    console.log('init', this.constructor.name, path, state);
+
+    this.VueApp = new Vue(App);
+    this.eventHandler();
+  }
+
+  eventHandler () {
+    this.$$on('onAuth', () => this.$$rout({
+      path: '/main/',
+      state: null,
+    }));
+  }
+
+  dispatcher (path, state) {
+    console.log('dispatcher', this.constructor.name, path, state);
+  }
+
+  mounted (module, layout) {
+    console.log('mounted', this.constructor.name, module, layout);
+  }
+
+  destroy () {
+    this.$$offAll()
+    this.VueApp.$destroy();
+    document.getElementById('ROOT').innerHTML = '';
+  }
+}
+</code></pre>
+<p>Module - наследуется от Onedeck.RootModule</p>
+<h2>Хуки жизненного цикла</h2>
+<h5><code>init (path, state)</code> - инициализация модуля. В этом методе необходимо вызвать  <code>eventHandler</code> метод для обработки событий</h5>
+<p><code>@param {Array} path</code> - массив с элементами url адреса. <code>['module_name', 'item', '1']</code>
+<code>@param {Object} state </code> - данные переданные с url.</p>
+<h6><code>init</code> срабатывает в следующем порядке:</h6>
+<ul>
+<li>Для Root и Global модулей срабатывает 1 раз при инициализации приложения.</li>
+<li>Для Embed модуля который встраивается в Global - 1 раз при инициализации.</li>
+<li>Для Layout модуля - каждый раз при смене Layout.</li>
+<li>Для Page модуля и для Embed модуля - каждый раз при смене Page модуля.</li>
+</ul>
+<h5><code>dispatcher(path, state)</code> - диспетчер, в этом методе необходимо описать дейсвия при смене url.</h5>
+<p><code>@param {Array} path</code> - массив с элементами url адреса. <code>['module_name', 'item', '1']</code>
+<code>@param {Object} state </code> - данные переданные с url.</p>
+<h6><code>dispatcher</code> вызывается в следующем порядке:</h6>
+<ol>
+<li>Вызывается dispatcher Root моудля.</li>
+<li>Вызывается dispatcher Globla моудля.</li>
+<li>Вызываются dispatcher Embed моудлей котрые встраиваются в Globla модуль.</li>
+<li>Вызывается dispatcher Layout моудля.</li>
+<li>Вызывается dispatcher Page моудля.</li>
+<li>Вызываются dispatcher Embed моудлей котрые встраиваются в Page модуль.</li>
+</ol>
+<h5><code>mounted(currentModule, currentLayout)</code> - вызывается после того как все модули смонтированы в DOM дерево</h5>
+<p><code>@param {Object} currentModule</code> - текущий Page модуль.
+<code>@param {Object} currentLayout</code> - текущий Layout модуль.</p>
+<h6><code>mounted</code> вызывается в следующем порядке:</h6>
+<ol>
+<li>Вызывается mounted Root моудля.</li>
+<li>Вызывается mounted Globla моудля.</li>
+<li>Вызываются mounted Embed моудлей котрые встраиваются в Globla модуль.</li>
+<li>Вызывается mounted Layout моудля.</li>
+<li>Вызывается mounted Page моудля.</li>
+<li>Вызываются mounted Embed моудлей котрые встраиваются в Page модуль.</li>
+</ol>
+<h5><code>destroy ()</code> - деструктор модуля. В деструкторе необходимо уничножить объект модуля, почистить DOM дерево, отписаться от событий модуля.</h5>
+<h6><code>destroy</code> срабатывает в следующем порядке:</h6>
+<ul>
+<li>Для Root, Global и Embed (который встраивается в Global) модулей не вызывается, данные модули активны на всем протяжении работы приложения.</li>
+<li>Для Layout модуля - каждый раз при смене Layout.</li>
+<li>Для Page модуля и для Embed модуля - каждый раз при смене Page модуля.</li>
+</ul>
+<h2>События</h2>
+<p>ONEDECK предоставляет два типа событий:  события уровня модуля <code>$$emit</code> и события уровня приложения <code>$$gemit</code></p>
+<h4>Cобытия уровня модуля <code>$$emit</code></h4>
+<p>Каждый модуль имеет в себе реализацию паттерна <a href="https://refactoring.guru/ru/design-patterns/observer">observer</a>
+Модуль может создовать события c помощью методов <code>$$on</code> или <code>$$onOnce</code>
+Желательно события создавать в методе <code>eventHandler</code>, но возможны и другие варианты.
+Пример создания события:</p>
+<pre class="prettyprint source"><code>  eventHandler () {
+    // Можно так
+    this.$$on('onExample1', (data) => {
+        console.log(data)
+    });
+    // Но лучше так
+    this.$$on('onExample2', this.onExample2Listener);
+  }
+</code></pre>
+<p>После того как мы создали событие мы можем его вызвать в любом месте модуля. (прмиер Vue.js):</p>
+<pre class="prettyprint source"><code>&lt;script>
+import store from 'Example/store';
+import { mapState, mapMutations } from 'vuex';
+import Module from 'Example/module';
+
+export default {
+  el: '#Embed',
+  name: 'EmbedApp',
+  store,
+  computed: {
+    ...mapState({
+      data: (state) => state.data,
+    }),
+  },
+  methods: {
+    ...mapMutations(['setData']),
+    notify() {
+      // Так как каждый модуль реализует Singleton мы получим текущий экземпляр данного модуля.
+      const module = new Module()
+      module.$$emit('onExample1', this.data)
+    }
+  },
+};
+&lt;/script>
+</code></pre>
+<pre class="prettyprint source"><code>import Module from 'Example/module';
+ // Так как каждый модуль реализует Singleton мы получим текущий экземпляр данного модуля.
+const module = new Module()
+module.$$emit('onExample1', this.data)
+</code></pre>
+<p>Так же мы можем отписаться от события:</p>
+<ol>
+<li><code>this.$$off('onExample2', this.onExample2Listener)</code></li>
+<li><code>this.$$offAll()</code></li>
+</ol>
+<h4>События уровня приложения <code>$$gemit</code></h4>
+<p>В приложении есть глобальные события. Они необходимы для общения между модулями.
+Мудуль ROOT реализует паттерн <a href="https://refactoring.guru/ru/design-patterns/mediator">Mediator</a>. Все глобальные события создает модуль ROOT.
+События создются точно так-же как и в обчном модуле, помощью методов <code>$$on</code> или <code>$$onOnce</code>.</p>
+<pre class="prettyprint source"><code>import ExampleNotification from 'ExampleNotification/module';
+import ExampleGlobalWnd from 'ExampleGlobalWnd/module';
+import axios from 'axios';
+
+export default class Root extends Onedeck.RootModule {
+  init (initObj) {
+    ...
+    this.eventHandler();
+  }
+
+  eventHandler () {
+    this.$$on('onExampleEvent', (exampleData) => {
+      this.exampleAction(exampleData);
+    });
+
+    this.$$on('onShowGlobalWnd', () => {
+      const wnd = new ExampleGlobalWnd();
+      wnd.show();
+    });
+
+    this.$$on('onNotify', (text) => {
+      const notifyObj = new ExampleNotification();
+      notifyObj.notify(text);
+    });
+
+    axios.interceptors.response.use(undefined, (error) => {
+        const notifyObj = new ExampleNotification();
+        notifyObj.ajaxError(text);
+        return Promise.reject(error);
+    });
+  }
+}
+</code></pre>
+<p>Теперь каждый модуль может вызвать необходимое нам событие с помощью метода <code>$$gemit</code>.</p>
+<pre class="prettyprint source"><code>import Module from 'Example/module';
+// Так как каждый модуль реализует Singleton мы получим текущий экземпляр данного модуля.
+const module = new Module()
+module.$$gemit('onNotify', this.data)
+</code></pre>
+<h2>Роутинг</h2>
+<p>ONEDECK позволяет использовать 2 вида роутинга <a href="https://developer.mozilla.org/ru/docs/Web/API/History_API">HISTORY API</a> и хэш роутинг (с помощью #)
+Чтобы переключиться между этими двумя режимами необходимо в конфиге задать параметр <strong><code>historyApi</code></strong>.
+<code>true</code> - роутинг с помщью <a href="https://developer.mozilla.org/ru/docs/Web/API/History_API">HISTORY API</a>
+<code>false</code> - хэш роутинг (с помощью #)</p>
+<h4>Метод <code>$$rout</code></h4>
+<p>Каждый модуль имеет метод <code>$$rout</code>.</p>
+<pre class="prettyprint source"><code>import Module from 'Example/module';
+const module = new Module()
+module.$$rout({
+ path: '/module_name/item/1',
+ state: {id: 1, name: 'example'},
+})
+</code></pre>
+<p><code>state: {id: 1, name: 'example'}</code> - данные которые мы передаем по этому url адресу, (см. раздел <strong>Хуки жизненного цикла</strong>, метод <code>init</code> и метод <code>dispatcher</code>)
+<code> path: '/module_name/item/1'</code> - перевый элемент url адреса <code>module_name</code> должен совпадать с ключем конфига моудля (см. раздел <strong>Конфиг файл</strong>)</p>
+<pre class="prettyprint source"><code>module_name: {
+  layout: 'ExampleLayout',
+  module: 'ExampleModule',
+},
+</code></pre></article>
     </section>
 
 
@@ -186,7 +481,7 @@ export default {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Tue Jun 09 2020 01:51:33 GMT+0300 (GMT+03:00)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Tue Jun 23 2020 18:47:49 GMT+0300 (GMT+03:00)
 </footer>
 
 <script> prettyPrint(); </script>
